@@ -6,26 +6,29 @@ interface formModel { name: string
 	partner: string
 }
 
-const postNft = async (payload: formModel) => {
-	const token = `${import.meta.env.VITE_GCLOUD_TOKEN}`
-	const path = `${import.meta.env.VITE_GCLOUD_FUNCTION_URL}/register-nft`
-	const config = {
-    headers: {
-      // 'Authorization': `Bearer ${import.meta.env.VITE_GCLOUD_TOKEN}`,
-			'Content-Type': 'application/json'
-    }
-  }
-	try {
-		const res = await axios.post(path,payload,config)
-		console.log(res)
-	}
-	catch(error) {
-		console.log(error)
-	}	
-
-}
-
 function App() {
+
+	const postNft = async (payload: formModel) => {
+		const token = `${import.meta.env.VITE_GCLOUD_TOKEN}`
+		const path = `${import.meta.env.VITE_GCLOUD_FUNCTION_URL}/register-nft`
+		const config = {
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		}
+		try {
+			setLoading(true)
+			const res = await axios.post(path,payload,config)
+			setFormState(initialFormState)
+			setLoading(false)
+			setShowErrors(false)
+			console.log(res)
+		}
+		catch(error) {
+			console.log(error)
+		}	
+	
+	}
 
 	const initialFormState: formModel= {				
 		name: "",
@@ -35,7 +38,12 @@ function App() {
 
 	const submitForm = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
-		postNft(formState)
+		if(formErrors) {
+			setShowErrors(true)
+		}
+		else {
+			postNft(formState)
+		}
 	}
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -45,6 +53,10 @@ function App() {
 	}
 
 	const [formState,setFormState]=useState(initialFormState)
+	const [showErrors,setShowErrors]=useState(false)
+	const [loading,setLoading]=useState(false)
+	const formErrors = Object.values(formState).includes("")
+	console.log(formErrors)
   
 	return (
 		<form 
@@ -77,15 +89,23 @@ function App() {
 				/>
 			<br/>
 
-			{<p id="error-message">Please enter all details.</p>}
-		
-			<button 
-				type="submit"
-				id="submit-button"
-				disabled={!formState.name || !formState.description || !formState.partner}
-				>
-				SUBMIT
-			</button>
+			{(showErrors && formErrors) && <p id="error-message">Please enter all details.</p>}
+			{loading? 
+				<button 
+					type="submit"
+					id="submit-button"
+					disabled
+					>
+					LOADING...
+				</button>
+				: 
+				<button 
+					type="submit"
+					id="submit-button"
+					>
+					SUBMIT
+				</button>
+				}
 		</form>
 	)
 }
