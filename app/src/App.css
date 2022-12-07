@@ -2,21 +2,44 @@ input {
 	padding: 12px;
 	padding-left: 24px;
 	padding-right: 24px;
-	width: 100%;
+	height: 25.5px;
   border-radius: 30px;
   border: none;
   background-color: #222;
-  color: #fff;
-		
+ 	color: #fff;
 }
 
-button {
+#submit-button {
 	width: 100%;
+	margin-top: 40px;
+	padding: 12px;
+	padding-left: 24px;
+	padding-right: 24px;
   border-radius: 30px;
-  border: none;
+	background: url('https://callback.is/static/media/HoloBackground.93614b2f.png') no-repeat;
+	background-size: cover;
+  border-style: none;
 }
 
 form {
+	width: 50%;
+	max-width: 600px;
+	margin-top: 200px;
+	margin-left: auto;
+	margin-right: auto;
 	display: flex;
 	flex-direction: column;
+}
+
+h1{
+	height: 40px;
+	font-weight: 700px;
+	text-align: center;
+	color: white;
+}
+
+@media screen and (max-width: 992px) {
+  form {
+    width: 90%;
+  }
 }
